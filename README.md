@@ -7,7 +7,7 @@ LibFile: 	WingsASK.scad
    Generate a wing with an airfoil from the catalog PerfilesASK                       
                                                                                       
    by Alberto Solorzano Kraemer, 2020, betobetok@gmail.com                            
-   https://www.thingiverse.com/...                                                    
+   https://www.thingiverse.com/4321767                                                    
    Airfoil data basis from UIUC                                                       
    (https://m-selig.ae.illinois.edu/ads/coord_database.html)                              
                                                                                       
