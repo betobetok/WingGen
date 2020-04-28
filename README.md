@@ -28,15 +28,15 @@ Author: Alberto Solorzano Kraemer ( betobetok@gmail.com )
     
     Parameters
 
-    rootAirfoil -   Is the airfoil that is used to the root section in the wing.
-    tipAirfoil  -   Is the airfoil that is used to the tip section in the wing. When is omitted the rootAirfoil is used in the tip section.
-    rootChord   -   Is the chord for the root section of the wing.
-    tipChord    -   Is the chord for the tip section of the wing. When is omitted at the same time that conicity the rootChord is used in the tip section and the wing is a rectangular wing. When is omitted but the conicity is typed, the tipCord = conicity*rootChord.
-    wingSpan   -   Is the wingspan of the half wing.
-    arrow       -   Is the angle of arrow in the wing with positive angle to back. When is omitted, the arrow is null. 
-    twist       -   Is the angle of twist in the wing with positive angle in the direction of wash down (-alfa). When is omitted, the twist is null.
-    dihedral     -   Is the angle of dihedral in the wing with positive angle to up. When is omitted, the dihedral is null and the wing is planar.
-    conicity    -   Is the ratio between rootChord and tipChord (tipChord/rootChord). When is omitted the conicity is exactly tipChord/rootChord
+    rootAirfoil     -   Is the airfoil that is used to the root section in the wing.
+    tipAirfoil      -   Is the airfoil that is used to the tip section in the wing. When is omitted the rootAirfoil is used in the tip section.
+    rootChord       -   Is the chord for the root section of the wing.
+    tipChord        -   Is the chord for the tip section of the wing. When is omitted at the same time that conicity the rootChord is used in the tip section and the wing is a rectangular wing. When is omitted but the conicity is typed, the tipCord = conicity*rootChord.
+    wingSpan        -   Is the wingspan of the half wing.
+    arrow           -   Is the angle of arrow in the wing with positive angle to back. When is omitted, the arrow is null. 
+    twist           -   Is the angle of twist in the wing with positive angle in the direction of wash down (-alfa). When is omitted, the twist is null.
+    dihedral        -   Is the angle of dihedral in the wing with positive angle to up. When is omitted, the dihedral is null and the wing is planar.
+    conicity        -   Is the ratio between rootChord and tipChord (tipChord/rootChord). When is omitted the conicity is exactly tipChord/rootChord
 
     Usage Examples
 
@@ -47,14 +47,13 @@ Author: Alberto Solorzano Kraemer ( betobetok@gmail.com )
     
     Parameters
 
-    airfoil -   Is the airfoil that is used to the root section in the wing.
-    rootChord   -   Is the chord for the root section of the wing.
-    wingSpan   -   Is the wingspan of the half wing.
-    arrow       -   Is the angle of arrow in the wing with positive angle to back. When is omitted, the arrow is null. 
-    twist       -   Is the angle of twist in the wing with positive angle in the direction of wash down (-alfa). When is omitted, the twist is null.
-    dihedral     -   Is the angle of dihedral in the wing with positive angle to up. When is omitted, the dihedral is null and the wing is planar.
-    r           -   Is the ratio between the front radios and the rear radius for a semi-elliptical surface, when r=1, the wing is a leading elliptical edge,
-                    when r=2 the wing is a complete elliptical wing and when r>2 the wing is a semi-elliptical wing wit a leading edge more plane
+    airfoil         -   Is the airfoil that is used to the root section in the wing.
+    rootChord       -   Is the chord for the root section of the wing.
+    wingSpan        -   Is the wingspan of the half wing.
+    arrow           -   Is the angle of arrow in the wing with positive angle to back. When is omitted, the arrow is null. 
+    twist           -   Is the angle of twist in the wing with positive angle in the direction of wash down (-alfa). When is omitted, the twist is null.
+    dihedral        -   Is the angle of dihedral in the wing with positive angle to up. When is omitted, the dihedral is null and the wing is planar.
+    r               -   Is the ratio between the front radios and the rear radius for a semi-elliptical surface, when r=1, the wing is a leading elliptical edge, when r=2 the wing is a complete elliptical wing and when r>2 the wing is a semi-elliptical wing wit a leading edge more plane
     
     Usage Examples
     
