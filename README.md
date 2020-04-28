@@ -1,5 +1,5 @@
 # WingGen
-enerate a wing with an airfoil from the catalog PerfilesASK
+Generate a wing with an airfoil from the catalog PerfilesASK
 LibFile: 	WingsASK.scad                                                            
           	UtilidadesPerfil.scad                                                    
           	GenNACAXXXX.scad                                                         
