@@ -1,38 +1,21 @@
 # WingGen
 enerate a wing with an airfoil from the catalog PerfilesASK
-//////////////////////////////////////////////////////////////////////////////////////////
-// LibFile: 	WingsASK.scad                                                             //
-//          	UtilidadesPerfil.scad                                                     //
-//          	GenNACAXXXX.scad                                                          //
-//                                                                                      //
-//   Generate a wing with an airfoil from the catalog PerfilesASK                       //
-//                                                                                      //
-//   by Alberto Solorzano Kraemer, 2020, betobetok@gmail.com                            //
-//   https://www.thingiverse.com/...                                                    //
-//   Airfoil data basis from UIUC                                                       //
-//   (https://m-selig.ae.illinois.edu/ads/coord_database.html)                          //    
-//                                                                                      //
-//   This file is public domain.  Use it for any purpose, including commercial          //
-//   applications.  Attribution would be nice, but is not required.  There is           //
-//   no warranty of any kind, including its correctness, usefulness, or safety.         //
-//                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////
+LibFile: 	WingsASK.scad                                                            
+          	UtilidadesPerfil.scad                                                    
+          	GenNACAXXXX.scad                                                         
 
-////////////////////////////////////////////////////////////////////
-//                                                                //
-//                                                                //
-//                    ////    //////   //   //                    //
-//                   // //   //        //  //                     //
-//                  //  //   //        // //                      //
-//                 ///////    //////   ////                       //
-//                //    //        //   // //                      //
-//               //     //   //////    //  //                     //
-//                            __!__                               //
-//                      ^----o-(_)-o----^                         //
-//                                                                //
-////////////////////////////////////////////////////////////////////
-	Author: Alberto Solorzano Kraemer ( betobetok@gmail.com )
-	License: GPL
+   Generate a wing with an airfoil from the catalog PerfilesASK                       
+                                                                                      
+   by Alberto Solorzano Kraemer, 2020, betobetok@gmail.com                            
+   https://www.thingiverse.com/...                                                    
+   Airfoil data basis from UIUC                                                       
+   (https://m-selig.ae.illinois.edu/ads/coord_database.html)                              
+                                                                                      
+   This file is public domain.  Use it for any purpose, including commercial          
+   applications.  Attribution would be nice, but is not required.  There is           
+   no warranty of any kind, including its correctness, usefulness, or safety.         
+
+Author: Alberto Solorzano Kraemer ( betobetok@gmail.com )
     
     File to generate a elliptical or a conic wing with one or two airfoils evolving from one in the root to the other in the tip.
     
