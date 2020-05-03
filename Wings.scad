@@ -82,36 +82,24 @@ use <constants.scad>
 use <shapes.scad>
 use <GenNACAXXXX.scad>
 use <perfilesASK_1_0.scad>
-use <Utilidadesperfiles.scad>
+use <AirfoilUtilities.scad>
 
 
-//conicWing(rootAirfoil="NACA6322", rootChord=12, tipChord=5, wingSpan=40, arrow=10, twist=5, dihedral=2);
+//conicWing(rootAirfoil="NACA8512", tipAirfoil="NACA0012", rootChord=12, tipChord=5, wingSpan=40, arrow=30, twist=5, dihedral=2);
 //mirror([0,0,1]) conicWing(rootAirfoil="NACA6322", rootChord=12, tipChord=5, wingSpan=40, arrow=10, twist=5, dihedral=2);
 
-//ellipticWing(airfoil="NACA6312", rootChord=12, wingSpan=80, arrow=0, twist=4, dihedral=0, r=3);
-//mirror([0,0,1]) ellipticWing(airfoil="NACA6312", rootChord=12, wingSpan=80, arrow=0, twist=4, dihedral=0, r=3);
+ellipticWing(airfoil="NACA6312", rootChord=200, wingSpan=600, arrow=0, twist=0, dihedral=1, r=3);
+//mirror([0,0,1]) ellipticWing(airfoil="NACA6312", rootChord=12, wingSpan=80, arrow=20, twist=4, dihedral=0, r=3);
 
 
 //module to make a eliptical wing with a base chord of rootChord and a wing spand of wingSpan and the optional atributes of twist, arrow and dihedral, the value of r determines the aspect ratio of the leding vs trailing edge
 module ellipticWing(airfoil, rootChord, wingSpan, arrow=0, twist=0, dihedral=0, r=3){
     
-    assert((str(airfoil[0],airfoil[1],airfoil[2],airfoil[3])=="NACA" && len(airfoil)==8) || is_Airfoil(airfoil), "Airfoil not found");
+    assert(is_NACA(airfoil) || is_Airfoil(airfoil), "Airfoil not found");  //x wingSpan  y = chord   x = a cos   y = b sin
     
-    if(str(airfoil[0],airfoil[1],airfoil[2],airfoil[3])=="NACA"){
-        rotate([0,0,twist]) for(n=[0:89]){
-            chain_hull(){
-                translate([-rootChord*sin(n)/r+wingSpan*cos(n)*sin(arrow),wingSpan*cos(n)*sin(dihedral),wingSpan*cos(n)]) rotate([0,0,-n*twist/90]) GenNACA(airfoil, cuerda=rootChord*sin(n));
-                translate([-rootChord*sin(n+1)/r+wingSpan*cos(n+1)*sin(arrow),wingSpan*cos(n+1)*sin(dihedral),wingSpan*cos(n+1)]) rotate([0,0,-(n+1)*twist/90]) GenNACA(airfoil, cuerda=rootChord*sin(n+1));
-            }
-        }  
-    }else {
-        rotate([0,0,twist]) for(n=[0:89]){
-            chain_hull(){
-                translate([-rootChord*sin(n)/r+wingSpan*cos(n)*sin(arrow),wingSpan*cos(n)*sin(dihedral),wingSpan*cos(n)]) linear_extrude(height = 0.1, center = false, convexity = 10) rotate([0,0,-(n)*twist/90]) perfil(airfoil, rootChord*sin(n));
-                translate([-rootChord*sin(n+1)/r+wingSpan*cos(n+1)*sin(arrow),wingSpan*cos(n+1)*sin(dihedral),wingSpan*cos(n+1)]) linear_extrude(height = 0.1, center = false, convexity = 10) rotate([0,0,-(n+1)*twist/90]) perfil(airfoil, rootChord*sin(n+1));
-            }
-        }  
-    }  
+    rotate([dihedral,0,0]) for(n=[0:89]){
+        translate([rootChord/2-rootChord*sin(n)/r+wingSpan*cos(n)*sin(arrow),0,wingSpan*cos(n+1)]) rotate([0,0,twist*cos(n+1)]) extrudAirfoil(airfoil, airfoil, rootChord*sin(n), wingSpan*cos(n)-wingSpan*cos(n+1), twist=twist*cos(n)-twist*cos(n+1), conicity=sin(n)/sin(n+1), arrow=arrow, r=r);
+    } 
 }
 
 //Module to meke a conical or rectangular wing
@@ -119,30 +107,44 @@ module conicWing(rootAirfoil, tipAirfoil="", rootChord, tipChord=0, wingSpan, ar
     tipAirfoil= tipAirfoil!="" ? tipAirfoil : rootAirfoil;
     tipChord= tipChord!=0 ? tipChord : rootChord*conicity;
     conicity= tipChord==rootChord ? 1 : tipChord/rootChord;
-    assert((str(rootAirfoil[0],rootAirfoil[1],rootAirfoil[2],rootAirfoil[3])=="NACA" && len(rootAirfoil)==8) || is_Airfoil(rootAirfoil), "Airfoil not found");
-    assert((str(tipAirfoil[0],tipAirfoil[1],tipAirfoil[2],tipAirfoil[3])=="NACA" && len(tipAirfoil)==8) || is_Airfoil(tipAirfoil), "Airfoil not found");
+    assert((str(rootAirfoil[0],rootAirfoil[1],rootAirfoil[2],rootAirfoil[3])=="NACA" && len(rootAirfoil)==8) || is_Airfoil(rootAirfoil), "root Airfoil not found");
+    assert((str(tipAirfoil[0],tipAirfoil[1],tipAirfoil[2],tipAirfoil[3])=="NACA" && len(tipAirfoil)==8) || is_Airfoil(tipAirfoil), "tip Airfoil not found");
     
-    if(str(rootAirfoil[0],rootAirfoil[1],rootAirfoil[2],rootAirfoil[3])=="NACA" && str(tipAirfoil[0],tipAirfoil[1],tipAirfoil[2],tipAirfoil[3])=="NACA"){
-        chain_hull(){
-            translate([0,0,0]) GenNACA(rootAirfoil, cuerda=rootChord);
-            translate([wingSpan*sin(arrow),wingSpan*sin(dihedral),wingSpan*cos(arrow)]) rotate([0,0,twist]) GenNACA(tipAirfoil, cuerda=tipChord);
-        }  
-    }else if(is_Airfoil(rootAirfoil) && str(tipAirfoil[0],tipAirfoil[1],tipAirfoil[2],tipAirfoil[3])=="NACA"){
-        chain_hull(){
-            translate([0,0,0]) linear_extrude(height = 0.1, center = false, convexity = 10) perfil(rootAirfoil, rootChord);
-            translate([wingSpan*sin(arrow),wingSpan*sin(dihedral),wingSpan*cos(arrow)]) rotate([0,0,twist]) GenNACA(tipAirfoil, cuerda=tipChord);
-        }  
-    }else if(str(rootAirfoil[0],rootAirfoil[1],rootAirfoil[2],rootAirfoil[3])=="NACA" && is_Airfoil(tipAirfoil)){
-        chain_hull(){
-            translate([0,0,0]) GenNACA(rootAirfoil, cuerda=rootChord);
-            translate([wingSpan*sin(arrow),wingSpan*sin(dihedral),wingSpan*cos(arrow)]) rotate([0,0,twist]) linear_extrude(height = 0.1, center = false, convexity = 10) perfil(tipAirfoil, tipChord);
-        }
-    }else if(is_Airfoil(rootAirfoil) && is_Airfoil(tipAirfoil)){
-        chain_hull(){
-            translate([0,0,0]) linear_extrude(height = 0.1, center = false, convexity = 10) perfil(rootAirfoil, rootChord);
-            translate([wingSpan*sin(arrow),wingSpan*sin(dihedral),wingSpan*cos(dihedral)]) rotate([0,0,twist]) linear_extrude(height = 0.1, center = false, convexity = 10) perfil(tipAirfoil, tipChord);
-        }
-    }  
+    rotate([dihedral,0,0]) extrudAirfoil(rootAirfoil, tipAirfoil, rootChord, wingSpan, twist, conicity, arrow);  
 }
 
-// module mixWing() to be done
+
+// Modul to extrud an airfoil with diferente sources
+module extrudAirfoil(rootAirfoil, tipAirfoil, chord, wingSpan, twist=0, conicity=1, arrow=0, r=2){
+   assert(is_NACA(rootAirfoil) || is_Airfoil(rootAirfoil), "root Airfoil not found");
+   assert(is_NACA(tipAirfoil) || is_Airfoil(tipAirfoil), "tip Airfoil not found");
+    pointRootAirfoil = is_NACA(rootAirfoil) ? NACA(rootAirfoil) : is_Airfoil(rootAirfoil) ? concat(interpolate(secondLine(airfoil(rootAirfoil), len(airfoil(rootAirfoil))-1)), interpolateI(firstLine(airfoil(rootAirfoil)))) : [0,0];
+    pointTipAirfoil = is_NACA(tipAirfoil) ? NACA(tipAirfoil) : is_Airfoil(tipAirfoil) ? concat(interpolate(secondLine(airfoil(tipAirfoil), len(airfoil(tipAirfoil))-1)), interpolateI(firstLine(airfoil(tipAirfoil)))) : [0,0];
+    
+    pointst=generadorP(rotateASKZ(pointRootAirfoil*chord,0),translateASKX(rotateASKZ(pointTipAirfoil*chord*conicity,twist),(1-conicity)*chord/r+wingSpan*sin(arrow)),0,wingSpan);
+    fases = concat(lateral(pointst),[[len(pointst)-2,len(pointst)-1,1,0]],[tapaIn(pointst)],[tapaSu(pointst, len(pointst)-1)]);
+    polyhedron(points=pointst,faces=fases, convexity = 10);
+}
+
+//Functions
+function generadorP(airfoil1, airfoil2, a, b, n=0, airfoil=[])=n>len(airfoil1)-1 ? airfoil : generadorP(airfoil1, airfoil2, a, b, n+1, concat(airfoil,[concat(airfoil1[n],a)], [concat(airfoil2[n],b)]));  // Function to make an array of 3D points with the two airfoils
+
+function lateral(points, n=0, fases=[]) = n>len(points)-3 ? fases : lateral(points, n+2, concat(fases, [[n,n+1,n+3,n+2]])); //Function to generate the array with the number of points that delimitate the lateral faces
+
+function tapaIn(points, n=0, fases=[])=n>len(points)-1 ? fases : tapaIn(points, n+2, concat(fases, n)); //Function to generate the array with the number of points that delimitate the bottom faces
+function tapaSu(points, n, fases=[])=n<0 ? fases : tapaSu(points, n-2, concat(fases, n)); //Function to generate the array with the number of points that delimitate the upper faces
+ 
+function rotateASKZ(points, angle, n=0, output=[])= n>len(points)-1 ? output : rotateASKZ(points, angle, n+1, concat(output, [[points[n][0]*cos(angle)-points[n][1]*sin(angle),points[n][1]*cos(angle)+points[n][0]*sin(angle)]])); //Function to rotate 2D just the points of an airfoil
+
+function translateASKX(points, x, n=0, output=[])= n>len(points)-1 ? output : translateASKX(points, x, n+1, concat(output, [[points[n][0]+x,points[n][1]]])); //Function to translate in the x axe just the points of an airfoil
+
+function translateASKY(points, y, n=0, output=[])= n>len(points)-1 ? output : translateASKY(points, y, n+1, concat(output, [[points[n][0],points[n][1]+y]])); //Function to translate in the y axe just the points of an airfoil
+
+function firstLine(points, n=1, output=[])=(points[n+1][0]-points[n][0])>=0 ? concat(output, [points[n]]) : firstLine(points, n+1, concat(output, [points[n]])); //Function to separete the upper points of an airfoil
+
+function secondLine(points, n, output=[])=(points[n-1][0]-points[n][0])>0 ? output : secondLine(points, n-1, concat(output, [points[n]])); //Function to separete the lower points of an airfoil
+
+function interpolate(points, n=1, output=[])=n>1000 ? concat([[0,0]],output) : interpolate(points, n+1, concat(output, [[n/1000, lookup(n/1000,points)]]));
+function interpolateI(points, n=999, output=[])=n<=0 ? output : interpolateI(points, n-1, concat(output, [[n/1000, lookup(n/1000,points)]]));
+
+function is_NACA(airfoil) = str(airfoil[0],airfoil[1],airfoil[2],airfoil[3])=="NACA" && len(airfoil)==8 ? true : false; 
